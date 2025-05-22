@@ -2,10 +2,10 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using EmployeesFront.Server.Domain;
 using EmployeesFront.Server.Infrastructure;
-using Employees.Application.Employees.Commands;
 using System;
+using EmployeesFront.Server.Application.Employees.Commands.Create;
 
-namespace EmployeesFront.Server.Application.Employees.Commands
+namespace EmployeesFront.Server.Application.Employees.Commands.Update
 {
     public class UpdateEmployeeCommandHandler : IRequestHandler<UpdateEmployeeCommand, bool>
     {
@@ -16,7 +16,7 @@ namespace EmployeesFront.Server.Application.Employees.Commands
             _context = context;
         }
 
-        private async Task<IdCandidates> CheckEmployeeDifferences(IdCandidates employee, UpdateEmployeeCommand employeeCommand)
+        private IdCandidates CheckEmployeeDifferences(IdCandidates employee, UpdateEmployeeCommand employeeCommand)
         {
             IdCandidates employeeUpdated = new IdCandidates();
 
@@ -29,16 +29,11 @@ namespace EmployeesFront.Server.Application.Employees.Commands
             return employeeUpdated;
         }
 
-        private async Task<IdCandidates> FindEmployee(int? idCandidate)
+        private async Task<IdCandidates> FindEmployee(int idCandidate)
         {
             try
-            {
-                if (idCandidate == null)
-                {
-                    throw new ArgumentException("El empleado no existe");
-                }
-
-                return await _context.Employees.FindAsync((int)idCandidate);
+            {                
+                return await _context.Employees.FindAsync((int)idCandidate) ?? throw new NullReferenceException("No existe un empleado con ese codigo");
             }
             catch (Exception ex)
             {
@@ -49,13 +44,9 @@ namespace EmployeesFront.Server.Application.Employees.Commands
         {
             try
             {
-                
                 var employee = await FindEmployee(request.Id);
-                IdCandidates employeeUpdated = await CheckEmployeeDifferences(employee, request);                
-                
-
-                CreateEmployeeCommandHandler create = new CreateEmployeeCommandHandler(_context);
-                await create.saveEmployee(employeeUpdated);
+                IdCandidates employeeUpdated = CheckEmployeeDifferences(employee, request);
+                await saveEmployee(employeeUpdated);
                 return true;
             }
             catch (Exception ex)
@@ -63,11 +54,21 @@ namespace EmployeesFront.Server.Application.Employees.Commands
 
                 throw;
             }
-           
+
         }
 
-        
+        public async Task saveEmployee(IdCandidates employee)
+        {
+            try
+            {
+                _context.Employees.Update(employee);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException($"Error al guardar el empleado: {ex.Message}");
+            }
+        }
 
-        
     }
-} 
+}

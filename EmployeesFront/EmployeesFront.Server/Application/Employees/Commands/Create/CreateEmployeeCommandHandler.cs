@@ -3,7 +3,7 @@ using EmployeesFront.Server.Infrastructure;
 using EmployeesFront.Server.Domain;
 using Azure.Core;
 
-namespace Employees.Application.Employees.Commands
+namespace EmployeesFront.Server.Application.Employees.Commands.Create
 {
     public class CreateEmployeeCommandHandler : IRequestHandler<CreateEmployeeCommand, bool>
     {
@@ -14,29 +14,6 @@ namespace Employees.Application.Employees.Commands
         {
             _context = context;
         }
-
-        private async Task<bool> createEmployeeExperiences(CreateEmployeeCommand employeeCommand, int idCandidate)
-        {
-            List<CandidateExperiences> candidateExperiences = new List<CandidateExperiences>();
-            employeeCommand.Experiences.ForEach(exp =>
-            {
-
-                candidateExperiences.Add(new CandidateExperiences()
-                {
-                    IdCandidate = idCandidate,
-                    Company = exp.Company,
-                    Job = exp.Job,
-                    Description = exp.Description,
-                    Salary = exp.Salary,
-                    BeginDate = exp.BeginDate,
-                    EndDate = exp.EndDate,
-                });
-            });
-
-            await saveCandidateExperiences(candidateExperiences);
-            return true;
-        }
-      
 
         public async Task<bool> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
         {
@@ -51,7 +28,7 @@ namespace Employees.Application.Employees.Commands
                     InsertDate = DateTime.UtcNow.AddHours(timezone),
                 };
                 await saveEmployee(employee);
-                return await createEmployeeExperiences(request, employee.IdCandidate);
+                return true;
             }
             catch (Exception ex)
             {
@@ -69,19 +46,6 @@ namespace Employees.Application.Employees.Commands
             catch (Exception ex)
             {
                 throw new ArgumentException($"Error al guardar el empleado: {ex.Message}");
-            }
-        }
-
-        public async Task saveCandidateExperiences(List<CandidateExperiences> candidateExperiences)
-        {
-            try
-            {
-                _context.CandidateExperiences.AddRange(candidateExperiences);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException($"Error al guardar las experiencias del empleado: {ex.Message}");
             }
         }
     }
