@@ -1,3 +1,4 @@
+using EmployeesFront.Server.Domain;
 using MediatR;
 
 namespace EmployeesFront.Server.Application.Employees.Commands.Create

@@ -1,27 +1,94 @@
-# EmployeesfrontClient
+# EmployeesFront - Aplicación de Gestión de Empleados
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.19.
+## Descripción
+Aplicación web desarrollada con Angular para la gestión de empleados, integrada con un backend .NET Core.
 
-## Development server
+## Características
+- Interfaz de usuario moderna y responsiva
+- Operaciones CRUD para empleados
+- Diseño adaptable para diferentes dispositivos
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Requisitos
+- Node.js
+- npm
+- Angular CLI
 
-## Code scaffolding
+## Instalación
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+1. Clonar el repositorio:
+```bash
+git clone [URL_DEL_REPOSITORIO]
+cd EmployeesFront/employeesfront.client
+```
 
-## Build
+2. Instalar dependencias:
+```bash
+npm install
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+3. Iniciar el servidor de desarrollo:
+```bash
+ng serve
+```
 
-## Running unit tests
+La aplicación estará disponible en `http://localhost:53321`
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Estructura del Proyecto
+```
+src/
+├── app/
+│   ├── components/    # Componentes
+│   ├── services/     # Servicios
+│   ├── models/       # Modelos
+│   └── shared/       # Componentes compartidos
+├── assets/          # Recursos
+└── environments/    # Configuraciones
+```
 
-## Running end-to-end tests
+## Tecnologías
+- Angular
+- TypeScript
+- Angular Material
+- RxJS
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Scripts Disponibles
+- `npm start`: Inicia el servidor
+- `npm run build`: Compila el proyecto
+- `npm run test`: Ejecuta pruebas
 
-## Further help
+## Desarrollo
+1. Crear una rama para nueva funcionalidad:
+```bash
+git checkout -b feature/nueva-caracteristica
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+2. Realizar cambios y commits:
+```bash
+git add .
+git commit -m "Descripción de los cambios"
+```
+
+3. Enviar cambios:
+```bash
+git push origin feature/nueva-caracteristica
+```
+
+## Contribución
+1. Fork el proyecto
+2. Crear una rama
+3. Realizar cambios
+4. Enviar Pull Request
+
+## Soporte
+Para reportar problemas o solicitar nuevas características, crear un issue en el repositorio.
+
+## Licencia
+Este proyecto está bajo la Licencia MIT.
+
+## Autores
+- [Tu Nombre] - Desarrollador Principal
+
+## Agradecimientos
+- Equipo de desarrollo
+- Contribuidores
+- Comunidad de Angular

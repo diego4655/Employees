@@ -75,8 +75,18 @@ namespace EmployeesFront.Server.Application.Employees.Commands.Update
         {   
             try
             {
-                _context.CandidateExperiences.Update(candidateExperiences);
-                await _context.SaveChangesAsync();
+                await _context.CandidateExperiences
+                    .Where(exp => exp.IdCandidateExperience == candidateExperiences.IdCandidateExperience)
+                    .ExecuteUpdateAsync(s => s
+                        .SetProperty(e => e.BeginDate, candidateExperiences.BeginDate)
+                        .SetProperty(e => e.Company, candidateExperiences.Company)
+                        .SetProperty(e => e.Job, candidateExperiences.Job)
+                        .SetProperty(e => e.Description, candidateExperiences.Description)
+                        .SetProperty(e => e.EndDate, candidateExperiences.EndDate)                        
+                        .SetProperty(e => e.InsertDate, candidateExperiences.InsertDate)
+                        .SetProperty(e => e.ModifyDate, candidateExperiences.ModifyDate)
+                        .SetProperty(e => e.Salary, candidateExperiences.Salary)
+                        );
             }
             catch (Exception ex)
             {

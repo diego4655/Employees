@@ -4,6 +4,7 @@ using Employees.Application.Employees.Queries;
 using EmployeesFront.Server.Application.Employees.Commands.Create;
 using EmployeesFront.Server.Application.Employees.Commands.Update;
 using EmployeesFront.Server.Application.Employees.Queries;
+using EmployeesFront.Server.Application.Employees.Commands.Delete;
 
 namespace Employees.Controllers
 {
@@ -28,18 +29,18 @@ namespace Employees.Controllers
         }
 
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetEmployee(int id)
+        [HttpGet("{employeeId}")]
+        public async Task<IActionResult> GetEmployee(int employeeId)
         {
-            var query = new GetEmployeeQuery { Id = id };
+            var query = new GetEmployeeQuery { Id = employeeId };
             var employee = await _mediator.Send(query);
             return Ok(employee);
         }
 
-        [HttpGet("{EmployeeId}/experiences")]
-        public async Task<IActionResult> GetAllExperienceForEmployee(int EmployeeId)
+        [HttpGet("{employeeId}/experiences")]
+        public async Task<IActionResult> GetAllExperienceForEmployee(int employeeId)
         {
-            var query = new GetAllExperiencesQuery { EmployeeId = EmployeeId };
+            var query = new GetAllExperiencesQuery { EmployeeId = employeeId };
             var experiences = await _mediator.Send(query);
             return Ok(experiences);
         }
@@ -50,16 +51,24 @@ namespace Employees.Controllers
         public async Task<IActionResult> CreateEmployee(CreateEmployeeCommand command)
         {
             var employeeId = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetEmployee), new { id = employeeId }, employeeId);            
+            if (!employeeId)
+            {
+                return BadRequest();    
+            }
+            return Ok(employeeId);            
         }
 
         
-        [HttpPost("{id}/experiences")]
-        public async Task<IActionResult> CreateExperienceToEmployee(int id, CreateExperienceCommand experienceCommand)
+        [HttpPost("{experienceId}/experiences")]
+        public async Task<IActionResult> CreateExperienceToEmployee(int experienceId, CreateExperienceCommand experienceCommand)
         {
-            experienceCommand.EmployeeId = id;
+            experienceCommand.EmployeeId = experienceId;
             var experienceToEmployee = await _mediator.Send(experienceCommand);
-            return CreatedAtAction(nameof(GetEmployee), new { id }, experienceToEmployee);            
+            if (!experienceToEmployee)
+            {
+                return BadRequest();    
+            }
+            return Ok(experienceToEmployee);            
         }
         
         [HttpPatch("{id}")]
@@ -79,28 +88,38 @@ namespace Employees.Controllers
             return Ok();
         }
 
-        [HttpPatch("{id}/experiences")]
-        public async Task<IActionResult> UpdateExperience(int id, [FromBody] UpdateExperienceCommand command)
+        [HttpPatch("{experienceId}/experiences")]
+        public async Task<IActionResult> UpdateExperience(int experienceId, [FromBody] UpdateExperienceCommand command)
         {
-            if (id == 0)
+            if (experienceId == 0)
             {
                 return BadRequest(new { error = "ID de empleado invalido" });
             }
-            command.IdExperience = id;
+            command.IdExperience = experienceId;
             var result = await _mediator.Send(command);
             if (!result)
             {
-                return NotFound(new { error = $"Empleado con el Id {id} no encontrado" });
+                return NotFound(new { error = $"Empleado con el Id {experienceId} no encontrado" });
             }
             return Ok();
 
         }
-        // DELETE /api/employees/{id}
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEmployee(int id)
+        
+        [HttpDelete("{employeeId}")]
+        public async Task<IActionResult> DeleteEmployee(int employeeId)
         {
-            // TODO: Implement delete employee
-            return NoContent();
+            DeleteEmployeeCommand  deleteEmployee = new DeleteEmployeeCommand() { IdCandidate = employeeId};
+            var employee = await _mediator.Send(deleteEmployee);
+            return Ok(employee);
+        }
+
+        [HttpDelete("{experienceId}/experiences")]
+        public async Task<IActionResult> DeleteExperience(int experienceId)
+        {
+            DeleteExperienceCommand deleteExperience = new DeleteExperienceCommand() { IdExperience = experienceId };
+            var experience = await _mediator.Send(deleteExperience);
+            return Ok(experience);
+
         }
     }
 } 

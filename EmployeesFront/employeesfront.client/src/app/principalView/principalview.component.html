@@ -1,0 +1,222 @@
+<div class="card">
+    <p-table [value]="employees" dataKey="idCandidate" [tableStyle]="{ 'min-width': '60rem' }"
+        [expandedRowKeys]="expandedRows" (onRowExpand)="onRowExpand($event)" (onRowCollapse)="onRowCollapse($event)">
+        <ng-template pTemplate="caption">
+            <div class="flex flex-wrap justify-content-end">
+                <p-button label="Crear" icon="pi pi-plus" text (onClick)="showModalDialog()" />
+                <p-floatLabel>
+                    <input pInputText id="employeeSearch" [(ngModel)]="employeeSearch" />
+                    <label for="employeeSearch">Buscar</label>
+                </p-floatLabel>
+                <p-button label="Buscar" icon="pi pi-search" text (onClick)="searchEmployee()" />
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <th style="width: 5rem"></th>
+            <th>Id del candidato</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Fecha de nacimiento</th>
+            <th>Email</th>
+            <th>Fecha de Creación</th>
+            <th>Fecha de Modificación</th>
+            <th>Crear</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+        </ng-template>
+        <ng-template pTemplate="body" let-employee let-expanded="expanded">
+            <tr>
+                <td>
+                    <p-button type="button" pRipple [pRowToggler]="employee" [text]="true" [rounded]="true"
+                        [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                </td>
+                <td>{{employee.idCandidate}}</td>
+                <td>{{employee.name}}</td>
+                <td>{{employee.surname}}</td>
+                <td>{{employee.birthdate | date:'dd/MM/yyyy'}}</td>
+                <td>{{employee.email}}</td>
+                <td>{{employee.insertDate | date:'dd/MM/yyyy'}}</td>
+                <td>{{employee.modifyDate | date:'dd/MM/yyyy'}}</td>
+                <td>
+
+                </td>
+                <td>
+                    <p-button label="Editar" severity="warning" (onClick)="editEmployee(employee)" />
+                </td>
+                <td>
+                    <p-button label="Eliminar" severity="danger" (onClick)="deleteEmployee(employee)" />
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="rowexpansion" let-experience>
+            <tr>
+                <td colspan="7">
+                    <div class="p-3">
+                        <p-button label="Crear" icon="pi pi-plus" text (onClick)="showModalDialogExperience()" />
+                        <p-table [value]="experiences" dataKey="idCandidateExperience">                            
+                            <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="idCandidateExperience">Id de experiencia <p-sortIcon field="price" /></th>
+                <th pSortableColumn="company">Empresa <p-sortIcon field="customer" /></th>
+                <th pSortableColumn="job">Puesto <p-sortIcon field="date" /></th>
+                <th pSortableColumn="description">Descripción <p-sortIcon field="amount" /></th>
+                <th pSortableColumn="salary">Salario <p-sortIcon field="status" /></th>
+                <th pSortableColumn="beginDate">Fecha de inicio <p-sortIcon field="status" /></th>
+                <th pSortableColumn="endDate">Fecha de fin <p-sortIcon field="status" /></th>
+                <th pSortableColumn="insertDate">Fecha de creación <p-sortIcon field="status" /></th>
+                <th pSortableColumn="modifyDate">Fecha de modificación <p-sortIcon field="status" /></th>                
+                <th style="width: 4rem">Editar</th>
+                <th style="width: 4rem">Eliminar</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-order>
+            <tr>
+                <td>{{ order.idCandidateExperience }}</td>
+                <td>{{ order.company }}</td>
+                <td>{{ order.job }}</td>
+                <td>{{ order.description }}</td>
+                <td>{{ order.salary }}</td>
+                <td>{{ order.beginDate }}</td>
+                <td>{{ order.endDate }}</td>
+                <td>{{ order.insertDate }}</td>
+                <td>{{ order.modifyDate }}</td>                
+                <td>
+                    <p-button label="Editar" severity="warning" (onClick)="editExperience(order)" />
+                </td>
+                <td>
+                    <p-button label="Eliminar" severity="danger" (onClick)="deleteExperience(order)" />
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="6">There are no order for this product yet.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+</td>
+</tr>
+</ng-template>
+
+</p-table>
+</div>
+
+
+<div class="card flex justify-content-center">
+    <p-dialog [(visible)]="displayModal" [style]="{width: '450px'}" header="Crear Employee" [modal]="true"
+        [draggable]="false" [resizable]="false">
+        <div class="flex flex-column gap-2">
+            <label for="name">Name</label>
+            <input id="name" type="text" pInputText [(ngModel)]="newEmployee.name" required>
+
+            <label for="surname">Surname</label>
+            <input id="surname" type="text" pInputText [(ngModel)]="newEmployee.surname">
+
+            <label for="email">Email</label>
+            <input id="email" type="email" pInputText [(ngModel)]="newEmployee.email" required>
+
+            <label for="birthdate">Birthdate</label>
+            <input id="birthdate" type="date" pInputText [(ngModel)]="newEmployee.birthdate" required>
+        </div>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                (click)="hideModalDialog()"></button>
+            <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                (click)="saveEmployee()"></button>
+        </ng-template>
+    </p-dialog>
+</div>
+
+
+
+<div class="card flex justify-content-center">
+    <p-dialog [(visible)]="displayModalUpdate" [style]="{width: '450px'}" header="Actualizar Employee" [modal]="true"
+        [draggable]="false" [resizable]="false">
+        <div class="flex flex-column gap-2">
+            <label for="name">Name</label>
+            <input id="name" type="text" pInputText [(ngModel)]="newEmployee.name" required>
+
+            <label for="surname">Surname</label>
+            <input id="surname" type="text" pInputText [(ngModel)]="newEmployee.surname">
+
+            <label for="email">Email</label>
+            <input id="email" type="email" pInputText [(ngModel)]="newEmployee.email" required>
+
+            <label for="birthdate">Birthdate</label>
+            <input id="birthdate" type="date" pInputText [(ngModel)]="newEmployee.birthdate" required>
+        </div>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                (click)="hideModalDialog()"></button>
+            <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                (click)="updateEmployee()"></button>
+        </ng-template>
+    </p-dialog>
+</div>
+
+
+
+<div class="card flex justify-content-center">
+    <p-dialog [(visible)]="displayModalExperience" [style]="{width: '450px'}" header="Crear Experiencia" [modal]="true"
+        [draggable]="false" [resizable]="false">
+        <div class="flex flex-column gap-2">
+            <label for="company">Empresa</label>
+            <input id="company" type="text" pInputText [(ngModel)]="newExperience.company" required>
+
+            <label for="job">Puesto</label>
+            <input id="job" type="text" pInputText [(ngModel)]="newExperience.job">
+
+            <label for="description">Descripción</label>
+            <input id="description" type="text" pInputText [(ngModel)]="newExperience.description" required>
+
+            <label for="salary">Salario</label>
+            <input id="salary" type="number" pInputText [(ngModel)]="newExperience.salary" required>
+
+            <label for="beginDate">Fecha de inicio</label>
+            <input id="beginDate" type="date" pInputText [(ngModel)]="newExperience.beginDate" required>
+
+            <label for="endDate">Fecha de fin</label>
+            <input id="endDate" type="date" pInputText [(ngModel)]="newExperience.endDate" required>
+        </div>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                (click)="hideModalDialogExperience()"></button>
+            <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                (click)="saveExperience()"></button>
+        </ng-template>
+    </p-dialog>
+</div>
+
+
+<div class="card flex justify-content-center">
+    <p-dialog [(visible)]="displayModalExperienceUpdate" [style]="{width: '450px'}" header="Actualizar Experiencia" [modal]="true"
+        [draggable]="false" [resizable]="false">
+        <div class="flex flex-column gap-2">
+            <label for="company">Empresa</label>
+            <input id="company" type="text" pInputText [(ngModel)]="newExperience.company" required>
+
+            <label for="job">Puesto</label>
+            <input id="job" type="text" pInputText [(ngModel)]="newExperience.job">
+
+            <label for="description">Descripción</label>
+            <input id="description" type="text" pInputText [(ngModel)]="newExperience.description" required>
+
+            <label for="salary">Salario</label>
+            <input id="salary" type="number" pInputText [(ngModel)]="newExperience.salary" required>
+
+            <label for="beginDate">Fecha de inicio</label>
+            <input id="beginDate" type="date" pInputText [(ngModel)]="newExperience.beginDate" required>
+
+            <label for="endDate">Fecha de fin</label>
+            <input id="endDate" type="date" pInputText [(ngModel)]="newExperience.endDate" required>
+        </div>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                (click)="hideModalDialogExperience()"></button>
+            <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                (click)="updateExperience()"></button>
+        </ng-template>
+    </p-dialog>
+</div>

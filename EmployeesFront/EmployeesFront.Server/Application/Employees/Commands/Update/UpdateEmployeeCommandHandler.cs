@@ -19,7 +19,7 @@ namespace EmployeesFront.Server.Application.Employees.Commands.Update
         private IdCandidates CheckEmployeeDifferences(IdCandidates employee, UpdateEmployeeCommand employeeCommand)
         {
             IdCandidates employeeUpdated = new IdCandidates();
-
+            employeeUpdated.IdCandidate = employee.IdCandidate;
             employeeUpdated.Name = employeeCommand.Name ?? employee.Name;
             employeeUpdated.Surname = employeeCommand.Surname ?? employee.Surname;
             employeeUpdated.Birthdate = employeeCommand.Birthdate ?? employee.Birthdate;
@@ -32,7 +32,7 @@ namespace EmployeesFront.Server.Application.Employees.Commands.Update
         private async Task<IdCandidates> FindEmployee(int idCandidate)
         {
             try
-            {                
+            {
                 return await _context.Employees.FindAsync((int)idCandidate) ?? throw new NullReferenceException("No existe un empleado con ese codigo");
             }
             catch (Exception ex)
@@ -61,8 +61,17 @@ namespace EmployeesFront.Server.Application.Employees.Commands.Update
         {
             try
             {
-                _context.Employees.Update(employee);
-                await _context.SaveChangesAsync();
+                await _context.Employees
+                    .Where(canditate => canditate.IdCandidate == employee.IdCandidate)
+                    .ExecuteUpdateAsync(s => s
+                        .SetProperty(e => e.Name, employee.Name)
+                        .SetProperty(e => e.Surname, employee.Surname)
+                        .SetProperty(e => e.Email, employee.Email)
+                        .SetProperty(e => e.Birthdate, employee.Birthdate)
+                        .SetProperty(e => e.InsertDate, employee.InsertDate)
+                        .SetProperty(e => e.ModifyDate, employee.ModifyDate)
+                    );
+
             }
             catch (Exception ex)
             {
