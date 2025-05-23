@@ -38,7 +38,7 @@ ng serve
 Aplicación disponible en: `http://localhost:53321`
 
 ## Documentación
-- [Documentación del Backend](./Employees/README.md)
+- [Documentación del Backend](./EmployeesFront/EmployeesFront.Server/README.md)
 - [Documentación del Frontend](./EmployeesFront/employeesfront.client/README.md)
 
 ## Licencia
